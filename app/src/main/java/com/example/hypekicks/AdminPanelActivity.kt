@@ -29,6 +29,10 @@ class AdminPanelActivity : AppCompatActivity() {
             saveSneakerToDatabase()
         }
 
+        binding.btnBackToMain.setOnClickListener {
+            finish()
+        }
+
         binding.lvSneakers.setOnItemLongClickListener { _, _, position, _ ->
             val sneaker = sneakerList[position]
 
