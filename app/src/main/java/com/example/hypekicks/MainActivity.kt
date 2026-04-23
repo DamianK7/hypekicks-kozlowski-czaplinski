@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        adapter = SneakerGridAdapter(this, sneakerList)
+        adapter = SneakerGridAdapter(this, filteredList)
         binding.gridView.adapter = adapter
 
         loadSneakers()
@@ -41,6 +41,15 @@ class MainActivity : AppCompatActivity() {
 
         binding.gridView.setOnItemClickListener { _, _, position, _ ->
 
+            val sneaker = filteredList[position]
+
+            val intent = Intent(this, DetailsActivity::class.java)
+            intent.putExtra("brand", sneaker.brand)
+            intent.putExtra("model", sneaker.modelName)
+            intent.putExtra("price", sneaker.resellPrice)
+            intent.putExtra("image", sneaker.imageUrl)
+
+            startActivity(intent)
 
         }
     }
