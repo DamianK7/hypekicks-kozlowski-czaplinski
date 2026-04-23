@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PANEL ADMINISTRATORA"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText android:id="@+id/etBrand" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Marka (np. Nike)"/>
+    <EditText android:id="@+id/etModelName" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Model (np. Dunk Low)"/>
+    <EditText android:id="@+id/etReleaseYear" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:hint="Rok wydania"/>
+    <EditText android:id="@+id/etResellPrice" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:hint="Cena resell (PLN)"/>
+    <EditText android:id="@+id/etImageUrl" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Link do zdjęcia (Postimages.org)"/>
+
+    <Button
+        android:id="@+id/btnAddToBase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DODAJ DO BAZY"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Magazyn:"
+        android:textStyle="bold"/>
+
+    <ListView
+        android:id="@+id/lvSneakers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
