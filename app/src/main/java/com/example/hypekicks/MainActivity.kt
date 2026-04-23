@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         adapter = SneakerGridAdapter(this, filteredList)
         binding.gridView.adapter = adapter
 
+
         loadSneakers()
 
         setupSearch()
@@ -56,12 +57,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadSneakers() {
         db.collection("sneakers")
-            .get()
-            .addOnSuccessListener { result ->
+            .addSnapshotListener { value, error ->
 
                 sneakerList.clear()
 
-                for (doc in result) {
+                for (doc in value!!) {
                     val sneaker = doc.toObject(Sneaker::class.java)
                     sneaker.id = doc.id
                     sneakerList.add(sneaker)
