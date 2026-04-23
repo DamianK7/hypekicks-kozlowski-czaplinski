@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private val db = Firebase.firestore
 
     private val sneakerList = mutableListOf<Sneaker>()
+    private val filteredList = mutableListOf<Sneaker>()
     private lateinit var adapter: SneakerGridAdapter
 
 
@@ -35,6 +36,13 @@ class MainActivity : AppCompatActivity() {
         binding.gridView.adapter = adapter
 
         loadSneakers()
+
+        setupSearch()
+
+        binding.gridView.setOnItemClickListener { _, _, position, _ ->
+
+
+        }
     }
 
     private fun loadSneakers() {
@@ -50,7 +58,41 @@ class MainActivity : AppCompatActivity() {
                     sneakerList.add(sneaker)
                 }
 
+                filteredList.clear()
+                filteredList.addAll(sneakerList)
+
                 adapter.notifyDataSetChanged()
             }
+    }
+
+    private fun setupSearch() {
+
+        binding.searchView.setOnQueryTextListener(object :
+            android.widget.SearchView.OnQueryTextListener {
+
+            override fun onQueryTextSubmit(query: String?) = false
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+
+                val text = newText!!.lowercase()
+
+                filteredList.clear()
+
+                filteredList.addAll(
+                    sneakerList.filter {
+                        it.modelName.lowercase().contains(text) ||
+                                it.brand.lowercase().contains(text)
+                    }
+                )
+
+                adapter.notifyDataSetChanged()
+                return true
+            }
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.searchView.setQuery("", false)
     }
 }
