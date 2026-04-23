@@ -1,6 +1,7 @@
 package com.example.hypekicks
 
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hypekicks.databinding.ActivityAdminPanelBinding
@@ -13,15 +14,55 @@ class AdminPanelActivity : AppCompatActivity() {
 
     private val db = Firebase.firestore
 
+    private val sneakerList = mutableListOf<Sneaker>()
+    private lateinit var adapter: SneakerAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAdminPanelBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        adapter = SneakerAdapter(this, sneakerList)
+        binding.lvSneakers.adapter = adapter
+
         binding.btnAddToBase.setOnClickListener {
             saveSneakerToDatabase()
         }
+
+        binding.lvSneakers.setOnItemLongClickListener { _, _, position, _ ->
+            val sneaker = sneakerList[position]
+
+            db.collection("sneakers")
+                .document(sneaker.id)
+                .delete()
+                .addOnSuccessListener {
+                    loadSneakers()
+                }
+
+            true
+        }
+
+        loadSneakers()
+
     }
+
+    private fun loadSneakers() {
+        db.collection("sneakers")
+            .addSnapshotListener { value, error ->
+
+                if (error != null) return@addSnapshotListener
+                sneakerList.clear()
+
+                for (document in value!!) {
+                    val sneaker = document.toObject(Sneaker::class.java)
+                    sneaker.id = document.id
+                    sneakerList.add(sneaker)
+                }
+
+                adapter.notifyDataSetChanged()
+            }
+    }
+
 
     private fun saveSneakerToDatabase() {
 
