@@ -1,20 +1,69 @@
 package com.example.hypekicks
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.example.hypekicks.databinding.ActivityAdminPanelBinding
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class AdminPanelActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityAdminPanelBinding
+
+    private val db = Firebase.firestore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_admin_panel)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        binding = ActivityAdminPanelBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.btnAddToBase.setOnClickListener {
+            saveSneakerToDatabase()
         }
+    }
+
+    private fun saveSneakerToDatabase() {
+
+        val brand = binding.etBrand.text.toString().trim()
+        val modelName = binding.etModelName.text.toString().trim()
+        val releaseYearStr = binding.etReleaseYear.text.toString().trim()
+        val resellPriceStr = binding.etResellPrice.text.toString().trim()
+        val imageUrl = binding.etImageUrl.text.toString().trim()
+
+
+        if (brand.isEmpty() || modelName.isEmpty() || releaseYearStr.isEmpty() || resellPriceStr.isEmpty() || imageUrl.isEmpty()) {
+            Toast.makeText(this, "Wypełnij wszystkie pola!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val sneaker = Sneaker(
+            id = "",
+            brand = brand,
+            modelName = modelName,
+            releaseYear = releaseYearStr.toInt(),
+            resellPrice = resellPriceStr.toInt(),
+            imageUrl = imageUrl
+        )
+
+        db.collection("sneakers")
+            .add(sneaker)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Buty dodane do magazynu!", Toast.LENGTH_SHORT).show()
+                clearFields()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Błąd zapisu: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+    }
+
+
+    private fun clearFields() {
+        binding.etBrand.text.clear()
+        binding.etModelName.text.clear()
+        binding.etReleaseYear.text.clear()
+        binding.etResellPrice.text.clear()
+        binding.etImageUrl.text.clear()
+
     }
 }
