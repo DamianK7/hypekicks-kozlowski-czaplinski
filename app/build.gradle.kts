@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.implementation
+
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
@@ -48,6 +50,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore-ktx")
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
