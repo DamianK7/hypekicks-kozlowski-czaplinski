@@ -14,6 +14,11 @@ import com.example.hypekicks.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val db = Firebase.firestore
+
+    private val sneakerList = mutableListOf<Sneaker>()
+    private lateinit var adapter: SneakerGridAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,5 +30,27 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, AdminPanelActivity::class.java)
             startActivity(intent)
         }
+
+        adapter = SneakerGridAdapter(this, sneakerList)
+        binding.gridView.adapter = adapter
+
+        loadSneakers()
+    }
+
+    private fun loadSneakers() {
+        db.collection("sneakers")
+            .get()
+            .addOnSuccessListener { result ->
+
+                sneakerList.clear()
+
+                for (doc in result) {
+                    val sneaker = doc.toObject(Sneaker::class.java)
+                    sneaker.id = doc.id
+                    sneakerList.add(sneaker)
+                }
+
+                adapter.notifyDataSetChanged()
+            }
     }
 }
